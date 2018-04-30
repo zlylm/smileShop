@@ -16,28 +16,56 @@
     </div>
     <!--轮播图部分-->
     <div id="swipe">
-      <van-swipe :autoplay="2500" style="max-height:9rem">
+      <van-swipe :autoplay="2500" style="max-height:8rem">
         <van-swipe-item v-for="(item,index) in swipeImgs" :key="index">
-          <img v-lazy="item.imageUrl" width="100%"/>
+          <img v-lazy="item.image" width="100%"/>
         </van-swipe-item>
       </van-swipe>
+    </div>
+    <!--商品分类-->
+    <div id="type-bar">
+      <div v-for="(item,index) in category" :key="index" class="type-bar-item">
+        <img :src="item.image" width="60%"/>
+        <span>{{item.mallCategoryName}}</span>
+      </div>
+    </div>
+    <!--广告图片-->
+    <div id="ad-banner">
+      <img v-lazy="adBanner.PICTURE_ADDRESS" width="100%" />
     </div>
   </section>
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     data() {
       return {
         addressIcon:require('../../assets/images/address.png'),
         searchIcon:require('../../assets/images/search.png'),
+        //轮播图
         swipeImgs:[
           {imageUrl:'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic001.jpg'},
           {imageUrl:'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic002.jpg'},
           {imageUrl:'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic003.jpg'},
         ],
+        //商品分类
+        category:[],
+        //广告图片
+        adBanner:'',
       }
     },
+    created(){
+      axios({
+        url:'https://www.easy-mock.com/mock/5ae69fc47e1b090ed5b8d829/smileShop/index',
+        method:'get'
+      }).then((res)=>{
+        console.log(res.data);
+        this.category=res.data.data.category;//商品分类
+        this.adBanner=res.data.data.advertesPicture;//广告图片
+        this.swipeImgs=res.data.data.slides;//轮播图片
+      }).catch((error)=>{})
+    }
   }
 </script>
 
@@ -78,8 +106,32 @@
     }
     /*顶部搜索框部分——结束*/
 
-    /*轮播图——开始*/
+    /*商品分类——开始*/
+    #type-bar{
+      margin:0.1875rem auto;
+      width: 19.6875rem;
+      height: 5rem;
+      border-radius: 0.125rem;
+      background:#fff;
+      display: flex;
+      flex-direction:row;
+      flex-wrap:nowrap;
+      .type-bar-item{
+        font-size: 0.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding-top: 0.5rem;
+        color: #666;
+      }
+    }
+    /*商品分类——结束*/
 
-    /*轮播图——结束*/
+    /*广告图片——开始*/
+    #ad-banner{
+      padding: 0.3125rem 0;
+    }
+    /*广告图片——结束*/
   }
 </style>
