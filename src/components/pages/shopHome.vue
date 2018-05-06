@@ -33,26 +33,49 @@
     <div id="ad-banner">
       <img v-lazy="adBanner.PICTURE_ADDRESS" width="100%" />
     </div>
+    <!--商品推荐-->
+    <div id="recommend">
+      <h1>商品推荐</h1>
+      <div class="re-home">
+        <swiper :options="swiperOption">
+          <swiper-slide v-for="(item,index) in recommend" :key="index">
+              <div class="re-home-item">
+                <img :src="item.image" width="100%"/>
+                <span class="mall-price">￥{{item.mallPrice}}</span>
+                <span class="price">￥{{item.price}}</span>
+              </div>
+          </swiper-slide>
+        </swiper>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
   import axios from 'axios'
+  import 'swiper/dist/css/swiper.css'
+  import {swiper,swiperSlide } from 'vue-awesome-swiper'
   export default {
+    components:{
+      swiper,
+      swiperSlide
+    },
     data() {
       return {
+        swiperOption:{
+          autoplay:true,
+          slidesPerView: 3,
+        },
         addressIcon:require('../../assets/images/address.png'),
         searchIcon:require('../../assets/images/search.png'),
         //轮播图
-        swipeImgs:[
-          {imageUrl:'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic001.jpg'},
-          {imageUrl:'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic002.jpg'},
-          {imageUrl:'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic003.jpg'},
-        ],
+        swipeImgs:[],
         //商品分类
         category:[],
         //广告图片
         adBanner:'',
+        //商品推荐
+        recommend:[],
       }
     },
     created(){
@@ -60,10 +83,13 @@
         url:'https://www.easy-mock.com/mock/5ae69fc47e1b090ed5b8d829/smileShop/index',
         method:'get'
       }).then((res)=>{
-        console.log(res.data);
-        this.category=res.data.data.category;//商品分类
-        this.adBanner=res.data.data.advertesPicture;//广告图片
-        this.swipeImgs=res.data.data.slides;//轮播图片
+        console.log(res);
+        if(res.status==200){
+          this.category=res.data.data.category;//商品分类
+          this.adBanner=res.data.data.advertesPicture;//广告图片
+          this.swipeImgs=res.data.data.slides;//轮播图片
+          this.recommend=res.data.data.recommend;//商品推荐
+        }
       }).catch((error)=>{})
     }
   }
@@ -117,7 +143,7 @@
       flex-direction:row;
       flex-wrap:nowrap;
       .type-bar-item{
-        font-size: 0.75rem;
+        font-size: 12px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -133,5 +159,39 @@
       padding: 0.3125rem 0;
     }
     /*广告图片——结束*/
+
+    /*商品推荐——开始*/
+    #recommend{
+      background-color: #fff;
+      h1{
+        font-size: 0.9375rem;
+        color: #ff5000;
+        height: 1.875rem;
+        line-height: 1.875rem;
+        text-indent: 0.625rem;
+        border-bottom:  solid 1px #E6E6FA;
+      }
+      .re-home{
+        border-bottom:  solid 1px #E6E6FA;
+        .re-home-item{
+          cursor: pointer;
+          text-align: center;
+          font-size: 13px;
+          color: #333333;
+          border-right:  solid 1px #E6E6FA;
+          span{
+            letter-spacing: 1px;
+            display: block;
+          }
+          .price{
+            display: block;
+            transform: scale(0.75);
+            color:#C0C0C0;
+            text-decoration: line-through;
+          }
+        }
+      }
+    }
+    /*商品推荐——结束*/
   }
 </style>
