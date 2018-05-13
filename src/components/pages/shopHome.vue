@@ -48,6 +48,31 @@
         </swiper>
       </div>
     </div>
+    <!--测试-->
+    <!-- <swiperTest></swiperTest> -->
+
+    <!--商品大类-->
+    <div id="floor">
+      <h1>海底世界</h1>
+      <div class="floor-top">
+        <div class="floor-top-one">
+          <img :src="floor1_1.image"/>
+        </div>
+        <div class="floor-right">
+          <div class="floor-top-two">
+            <img :src="floor1_2.image"/>
+          </div>
+          <div class="floor-top-three">
+            <img :src="floor1_3.image"/>
+          </div>
+        </div>
+      </div>
+      <div class="floor-bottom">
+        <div class="floor-bottom-item" v-for="(item,index) in floor1.slice(3)" :key="index">
+          <img :src="item.image"/>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -55,10 +80,12 @@
   import axios from 'axios'
   import 'swiper/dist/css/swiper.css'
   import {swiper,swiperSlide } from 'vue-awesome-swiper'
+  import swiperTest from './swiperText'
   export default {
     components:{
       swiper,
-      swiperSlide
+      swiperSlide,
+      swiperTest
     },
     data() {
       return {
@@ -76,6 +103,11 @@
         adBanner:'',
         //商品推荐
         recommend:[],
+        //商品大类
+        floor1:[],
+        floor1_1:{},
+        floor1_2:{},
+        floor1_3:{}
       }
     },
     created(){
@@ -89,6 +121,10 @@
           this.adBanner=res.data.data.advertesPicture;//广告图片
           this.swipeImgs=res.data.data.slides;//轮播图片
           this.recommend=res.data.data.recommend;//商品推荐
+          this.floor1=res.data.data.floor1;//商品大类
+          this.floor1_1=this.floor1[0];
+          this.floor1_2=this.floor1[1];
+          this.floor1_3=this.floor1[2];
         }
       }).catch((error)=>{})
     }
@@ -193,5 +229,49 @@
       }
     }
     /*商品推荐——结束*/
+
+    /*商品大类——开始*/
+    #floor{
+      background-color: #fff;
+      h1{
+        font-size: 0.9375rem;
+        color: #ff5000;
+        height: 1.875rem;
+        line-height: 1.875rem;
+        text-indent: 0.625rem;
+        border-bottom:  solid 1px #E6E6FA;
+      }
+      img{
+          width: 100%;
+      }
+      .floor-top{
+        display: flex;
+        flex-wrap: nowrap;
+        border-bottom:  solid 1px #E6E6FA;
+        div{
+          width: 10rem;
+          box-sizing: border-box;
+        }
+        .floor-top-one{
+          border-right:solid 1px #E6E6FA;
+        }
+        .floor-top-two{
+          border-bottom:  solid 1px #E6E6FA;
+        }
+      }
+      .floor-bottom{
+        display: flex;
+        flex-wrap: wrap;
+        .floor-bottom-item{
+          box-sizing: border-box;
+          border-bottom:  solid 1px #E6E6FA;
+          width: 10rem;
+        }
+        div:nth-child(odd){
+          border-right:solid 1px #E6E6FA;
+        }
+      }
+    }
+    /*商品大类——结束*/
   }
 </style>
